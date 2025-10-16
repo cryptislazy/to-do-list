@@ -1,0 +1,142 @@
+body{
+    margin: 0;
+    background-color: rgb(17, 17, 17);
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+button{
+    transition: opacity 0.2s ease;
+}
+
+#tasksUl{
+    display: flex;
+    flex-direction: column;
+    padding: 0px 15px;
+    gap: 10px;
+}
+
+.newDelete{
+    position: absolute;
+    right: 25px;
+    width: 30px;
+    cursor: pointer;
+    transform: translate(0px, -2px); /* move 2 px pra cima */
+    transition: opacity 0.2s ease;
+}
+
+li{
+    list-style: none;
+    background-color: rgb(31, 31, 31);
+    padding: 10px;
+    border-radius: 10px;
+    display: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: white;
+    font-size: 20px;
+    transition: background-color 0.2s ease;
+}
+
+li:hover{
+    background-color: rgb(44, 44, 44);
+}
+
+#error{
+    visibility: hidden;
+    color: rgb(255, 76, 76);
+    text-align: center;
+    transition: visibility 0.2s ease;
+    margin-top: 0px;
+    height: 20px;
+}
+
+#newTaskDiv{
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+#newTaskInput{
+    background-color: rgb(44, 44, 44);
+    border: none;
+    width: 300px;
+    height: 35px;
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+#newTaskInput:hover{
+    background-color: rgb(58, 58, 58);
+}
+
+#newTaskBtn{
+    height: 40px;
+    width: 40px;
+    border-radius: 15px;
+    border: none;
+    font-size: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease
+}
+
+#newTaskBtn:active{
+    background-color: rgb(215, 255, 215);
+}
+
+input[type="checkbox"]{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.checkedTask{
+    background-color: rgb(20, 20, 20);
+    color: rgba(255, 255, 255, 0.596);
+}
+
+.checkedTask:hover{
+    background-color: rgb(31, 31, 31);
+    color: rgba(255, 255, 255, 0.596);
+}
+
+.checkedTask .newDelete{
+    opacity: 50%; /*diminui a opacidade */
+}
+
+.taskClickRange{
+    width: calc(100% - 120px);
+    height: 45px;
+    position: absolute;
+    transform: translate(30px, -38px); /* o translate puxou 30px pra direita e 38px pra cima */
+}
+
+#emptyListMsg{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 65vh;
+    color: white;
+    
+}
+
+#emptyListMsg img{
+    width: 100px;
+    opacity: 20%;
+}
+
+#emptyListMsg p{
+    opacity: 30%;
+    font-size: 30px;
+    max-width: 350px;
+    text-align: center;
+    font-weight: 3000;
+}
