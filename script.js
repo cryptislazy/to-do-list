@@ -46,7 +46,7 @@ function saveTask(){
 
         newDelete.addEventListener(`click`, () => {
             newTask.remove()
-            if(tasks.length < 1) emptyListMsg.style.display = `flex`;
+            if (tasks.length < 1) emptyListMsg.style.display = `flex`;
         });
 
         checkboxes = document.querySelectorAll('input');
