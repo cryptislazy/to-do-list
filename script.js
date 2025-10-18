@@ -1,39 +1,40 @@
-const tasksUl = document.querySelector(`#tasksUl`);
-const newTaskDiv = document.querySelector(`#newTaskDiv`);
-const newTaskInput = document.querySelector(`#newTaskInput`);
-const newTaskBtn = document.querySelector(`#newTaskBtn`);
-const error = document.querySelector(`#error`);
-const emptyListMsg = document.querySelector(`#emptyListMsg`);
-let tasks = document.getElementsByTagName(`li`);
-let checkboxes;
+let tasksUl = document.querySelector(`#tasksUl`);
+let newTaskDiv = document.querySelector(`#newTaskDiv`);
+let newTaskInput = document.querySelector(`#newTaskInput`);
+let newTaskBtn = document.querySelector(`#newTaskBtn`);
+let error = document.querySelector(`#error`);
+let emptyListMsg = document.querySelector(`#emptyListMsg`);
+let tasks = document.querySelectorAll(`li`);
 let placeholderIndex = 0;
+let taskCheckedOrder = [];
+let tasksNodeList = document.querySelectorAll(`li`);
+let savedTasksHTML = localStorage.getItem(`savedTasksHTML`);
+let savedTaskCheckedOrder = JSON.parse(localStorage.getItem(`taskCheckedOrder`));
+let checkboxes = document.getElementsByTagName('input[type="checkbox"]');
 
-const placeholderAnimation = setInterval(() => {
+const placeholderAnimation = setInterval(() => {    //animacao do input
     let dots = [".", "..", "..."];
     placeholderIndex++;
     if (placeholderIndex > 2) placeholderIndex = 0;
     newTaskInput.placeholder = `Inserir nova tarefa` + dots[placeholderIndex];
 }, 1000);
 
-newTaskBtn.addEventListener(`click`, saveTask);
+newTaskBtn.addEventListener(`click`, saveTask);         //event listeners
 newTaskInput.addEventListener(`keyup`, event => {
     if (event.key === `Enter`) saveTask();
 });
 
-
-
-if(localStorage.getItem(`savedTasks`)){
-    let savedTasks = localStorage.getItem(`savedTasks`);
+if(localStorage.getItem(`savedTasksHTML`)){      //pegando tasks do localStorage
     let tempUl = document.createElement(`ul`);
-    tempUl.innerHTML = savedTasks;
+    tempUl.innerHTML = savedTasksHTML;
+    tasks = document.querySelectorAll(`li`);
     for(let li of tempUl.children){
-        let isChecked = false
-        if(li.firstElementChild.checked) isChecked = true;
-        loadSavedTasks(li.textContent, isChecked)
+        loadSavedTasks(li.textContent);
     }
+    emptyListMsg.style.display = `none`;
 }
 
-function loadSavedTasks(taskText, checked){
+function loadSavedTasks(taskText){     //funcao para recriar tasks do localStorage
         let newTask = document.createElement(`li`);
         let newDelete = document.createElement(`img`);
         let newCheck = document.createElement(`input`);
@@ -50,19 +51,19 @@ function loadSavedTasks(taskText, checked){
         newDelete.classList.add(`newDelete`);
         newTask.append(taskClickRange);
         emptyListMsg.style.display = `none`;
-        if (checked) newCheck.checked = true;
-        
 
         newDelete.addEventListener(`click`, () => {
             newTask.remove()
+            tasks = document.querySelectorAll(`li`);
             if (tasks.length < 1) emptyListMsg.style.display = `flex`;
-            localStorage.setItem(`savedTasks`, document.querySelector(`#tasksUl`).innerHTML);
+            refreshLocalStorage();
         });
-        checkboxes = document.querySelectorAll('input');
-        checkboxes.forEach(cb => {
+        let checkbox = document.querySelectorAll('input');
+        checkbox.forEach(cb => {
             cb.addEventListener(`change`, () => {
                 if (cb.checked) cb.parentElement.classList.add(`checkedTask`);
                 else cb.parentElement.classList.remove(`checkedTask`);
+                refreshLocalStorage();
             });
         });
         taskClickRange.addEventListener(`click`, () => {
@@ -70,12 +71,19 @@ function loadSavedTasks(taskText, checked){
             checkbox.checked = !checkbox.checked;
             if (checkbox.checked) checkbox.parentElement.classList.add(`checkedTask`);
             else newTask.classList.remove(`checkedTask`);
+            refreshLocalStorage();
         });
-
-        
 }
 
-function saveTask(){
+tasks = document.querySelectorAll(`li`);         //remarcando tasks do localStorage
+tasks.forEach((element, index) => {
+    if(savedTaskCheckedOrder[index] == `checked`){
+        element.firstElementChild.checked = true;
+        element.classList.add(`checkedTask`);
+    }
+});
+
+function saveTask(){                  //funcao para criar nova tarefa
     if(newTaskInput.value.length < 1){
         error.textContent = `Por favor insira uma tarefa válida`;
         error.style.visibility = `visible`;
@@ -101,25 +109,45 @@ function saveTask(){
 
         newDelete.addEventListener(`click`, () => {
             newTask.remove()
+            tasks = document.querySelectorAll(`li`);
             if (tasks.length < 1) emptyListMsg.style.display = `flex`;
-            localStorage.setItem(`savedTasks`, document.querySelector(`#tasksUl`).innerHTML);
+            refreshLocalStorage();
         });
-        checkboxes = document.querySelectorAll('input');
-        checkboxes.forEach(cb => {
+        let checkbox = document.querySelectorAll('input');
+        checkbox.forEach(cb => {
             cb.addEventListener(`change`, () => {
                 if (cb.checked) cb.parentElement.classList.add(`checkedTask`);
                 else cb.parentElement.classList.remove(`checkedTask`);
             });
+            refreshLocalStorage();
         });
         taskClickRange.addEventListener(`click`, () => {
             let checkbox = taskClickRange.parentElement.firstElementChild;
             checkbox.checked = !checkbox.checked;
             if (checkbox.checked) checkbox.parentElement.classList.add(`checkedTask`);
             else newTask.classList.remove(`checkedTask`);
+            refreshLocalStorage();
         });
+
         newTaskInput.placeholder = `Inserir nova tarefa...`;
         clearInterval(placeholderAnimation);
     }
-    localStorage.setItem(`savedTasks`, document.querySelector(`#tasksUl`).innerHTML);
     newTaskInput.value = ``;
+    refreshLocalStorage();
 }
+
+function refreshLocalStorage(){    //funcao para atualizar localStorage com alteracão nas tasks
+    tasksUl = document.querySelector(`#tasksUl`);
+    tasks = document.querySelectorAll(`li`);
+    let taskCheckedOrder = [];
+    for(let task of tasks){
+        if(task.firstElementChild.checked){
+            taskCheckedOrder.push(`checked`);
+        }
+        else{
+            taskCheckedOrder.push(`notChecked`);
+        }
+    }
+    localStorage.setItem(`savedTasksHTML`, tasksUl.innerHTML);
+    localStorage.setItem(`taskCheckedOrder`, JSON.stringify(taskCheckedOrder));
+};
