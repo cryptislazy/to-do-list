@@ -1,7 +1,29 @@
+@font-face{
+    font-family: "Inter";
+    src: url("assets/Inter.ttf");
+    font-family: normal;
+    font-style: normal;
+}
+
+:root{
+    --primary-color: rgb(17, 17, 17);
+    --secondary-color: rgb(31, 31, 31);
+    --tertiary-color: white;
+    --checked-color: rgb(20, 20, 20);
+}
+
 body{
     margin: 0;
-    background-color: rgb(17, 17, 17);
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: var(--primary-color);
+    transition: background-color 0.2s ease;
+    font-family: "Inter", sans-serif;
+}
+
+body.light{
+    --primary-color: rgb(255, 255, 255);
+    --secondary-color: rgb(240, 240, 240);
+    --tertiary-color: black;
+    --checked-color: rgb(250, 250, 250);
 }
 
 button{
@@ -17,29 +39,39 @@ button{
 
 .newDelete{
     position: absolute;
-    right: 25px;
+    right: 17px;
     width: 30px;
+    height: 30px;
     cursor: pointer;
-    transform: translate(0px, -2px); /* move 2 px pra cima */
+    transform: translate(0px, -12px);
     transition: opacity 0.2s ease;
+    fill: var(--tertiary-color);
+    padding: 5px;
+    padding-top: 10px;
+    align-self: flex-end;
 }
 
 li{
     list-style: none;
-    background-color: rgb(31, 31, 31);
+    background-color: var(--secondary-color);
     padding: 10px;
     border-radius: 10px;
     display: relative;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: white;
-    font-size: 20px;
+    color: var(--tertiary-color);
+    font-size: 17px;
     transition: background-color 0.2s ease;
 }
 
 li:hover{
     background-color: rgb(44, 44, 44);
+}
+
+.light li:hover{
+    background-color: rgb(216, 216, 216);
+    color: var(--tertiary-color);
 }
 
 #error{
@@ -60,12 +92,12 @@ li:hover{
 }
 
 #addTaskInput{
-    background-color: rgb(44, 44, 44);
+    background-color: var(--secondary-color);
     border: none;
     width: 300px;
     height: 35px;
     border-radius: 10px;
-    color: white;
+    color: var(--tertiary-color);
     font-size: 20px;
     text-align: center;
     transition: background-color 0.2s ease;
@@ -83,7 +115,9 @@ li:hover{
     font-size: 30px;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.2s ease
+    transition: background-color 0.2s ease;
+    background-color: var(--tertiary-color);
+    color: var(--primary-color);
 }
 
 #newTaskBtn:active{
@@ -98,24 +132,20 @@ input[type="checkbox"]{
 }
 
 .checkedTask{
-    background-color: rgb(20, 20, 20);
-    color: rgba(255, 255, 255, 0.596);
+    background-color: var(--checked-color);
+    opacity: 50%;
 }
 
 .checkedTask:hover{
-    background-color: rgb(31, 31, 31);
+    background-color: var(--secondary-color);
     color: rgba(255, 255, 255, 0.596);
-}
-
-.checkedTask .newDelete{
-    opacity: 50%; /*diminui a opacidade */
 }
 
 .taskClickRange{
     width: calc(100% - 120px);
     height: 45px;
     position: absolute;
-    transform: translate(30px, -38px); /* o translate puxou 30px pra direita e 38px pra cima */
+    transform: translate(30px, -38px);
 }
 
 #emptyListMsg{
@@ -124,19 +154,65 @@ input[type="checkbox"]{
     align-items: center;
     justify-content: center;
     height: 65vh;
-    color: white;
-    
+    color: var(--tertiary-color);
 }
 
-#emptyListMsg img{
-    width: 100px;
+#emptyListMsg svg{
+    height: 200px;
+    width: 150px;
     opacity: 20%;
+    fill: var(--tertiary-color);
 }
 
 #emptyListMsg p{
     opacity: 30%;
-    font-size: 30px;
+    font-size: 27px;
     max-width: 350px;
     text-align: center;
     font-weight: 3000;
+}
+
+#themeBtn{
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    border: none;
+    background-color: var(--secondary-color);
+    transition: background-color 0.5s ease;
+}
+
+#themeBtn:hover{
+    background-color: var(--tertiary-color);
+}
+
+#themeBtn svg:first-child{
+    display: none;
+    cursor: pointer;
+}
+
+#themeBtn svg:last-child{
+    fill: white;
+    cursor: pointer;
+}
+
+#themeBtn:hover svg:last-child{
+    fill: black;
+}
+
+.light #themeBtn svg:last-child{
+    display: none;
+}
+
+.light #themeBtn svg:first-child{
+    display: block;
+}
+
+.light #themeBtn:hover svg:first-child{
+    fill: white;
 }

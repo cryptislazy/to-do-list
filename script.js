@@ -8,6 +8,7 @@ let placeholderIndex = 0;
 let taskCheckedOrder = [];
 let savedTasksHTML = localStorage.getItem(`savedTasksHTML`);
 let savedTaskCheckedOrder = JSON.parse(localStorage.getItem(`taskCheckedOrder`));
+let themeBtn = document.querySelector(`#themeBtn`);
 
 window.addEventListener(`load`, refreshLocalStorage);
 
@@ -23,7 +24,7 @@ addTaskInput.addEventListener(`keyup`, event => {
     if (event.key === `Enter`) addTask();
 });
 
-if(localStorage.getItem(`taskCheckedOrder`)){      //pegando tasks do localStorage
+if(localStorage.getItem(`savedTasksHTML`)){      //pegando tasks do localStorage
     let tempUl = document.createElement(`ul`);
     tempUl.innerHTML = savedTasksHTML;
     tasks = document.querySelectorAll(`li`);
@@ -32,7 +33,12 @@ if(localStorage.getItem(`taskCheckedOrder`)){      //pegando tasks do localStora
     }
     emptyListMsg.style.display = `none`;
 }
-       
+
+if(localStorage.getItem(`lightMode`) === `ON`){      //coloca tema salvo
+    document.body.classList.add(`light`);
+}
+
+
 document.querySelectorAll(`li`).forEach((element, index) => {  //remarcando tasks do localStorage
     if(savedTaskCheckedOrder[index] == `checked`){
         element.firstElementChild.checked = true;
@@ -48,21 +54,21 @@ function addTask(taskText = addTaskInput.value){         //funcao para criar tar
     }
     else{
         let newTask = document.createElement(`li`);
-        let newDelete = document.createElement(`img`);
         let newCheck = document.createElement(`input`);
         let taskClickRange = document.createElement(`div`);
         
         taskClickRange.classList.add(`taskClickRange`);
         newTask.textContent = taskText;
         tasksUl.append(newTask);
-        newDelete.textContent = `Deletar`;
-        newTask.append(newDelete);
-        newDelete.src = `delete.svg`;
         newCheck.type = `checkbox`;
         newTask.prepend(newCheck);
-        newDelete.classList.add(`newDelete`);
         newTask.append(taskClickRange);
         emptyListMsg.style.display = `none`;
+        newTask.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>`;
+        
+        let newDelete = newTask.lastElementChild;
+        newDelete.classList.add(`newDelete`);
+        console.log(newDelete)
 
         addTaskInput.placeholder = `Inserir nova tarefa...`;
         clearInterval(placeholderAnimation);
@@ -105,3 +111,13 @@ function refreshLocalStorage(){    //funcao para atualizar localStorage com alte
     localStorage.setItem(`savedTasksHTML`, tasksUl.innerHTML);
     localStorage.setItem(`taskCheckedOrder`, JSON.stringify(taskCheckedOrder));
 }
+
+themeBtn.addEventListener(`click`, () => {       //salva o tema
+    document.body.classList.toggle(`light`);
+    if(document.body.matches(`.light`)){
+        localStorage.setItem(`lightMode`, `ON`);
+    }
+    else{
+        localStorage.setItem(`lightMode`, `OFF`);
+    }
+});
