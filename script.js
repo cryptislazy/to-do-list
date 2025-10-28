@@ -3,12 +3,17 @@ let addTaskInput = document.querySelector(`#addTaskInput`);
 let addTaskBtn = document.querySelector(`#addTaskBtn`);
 let error = document.querySelector(`#error`);
 let emptyListMsg = document.querySelector(`#emptyListMsg`);
-let tasks = document.querySelectorAll(`li`);
+let themeBtn = document.querySelector(`#themeBtn`);
+let tasks = document.getElementsByTagName(`li`);
 let placeholderIndex = 0;
 let taskCheckedOrder = [];
 let savedTasksHTML = localStorage.getItem(`savedTasksHTML`);
 let savedTaskCheckedOrder = JSON.parse(localStorage.getItem(`taskCheckedOrder`));
-let themeBtn = document.querySelector(`#themeBtn`);
+
+//variaveis do modo de edicao:
+let editModeLastParagraph = null;
+let editModeLastText = null;
+let editModeInput = null;
 
 window.addEventListener(`load`, refreshLocalStorage);
 
@@ -55,20 +60,19 @@ function addTask(taskText = addTaskInput.value){         //funcao para criar tar
     else{
         let newTask = document.createElement(`li`);
         let newCheck = document.createElement(`input`);
-        let taskClickRange = document.createElement(`div`);
+        let newText = document.createElement(`p`);
         
-        taskClickRange.classList.add(`taskClickRange`);
-        newTask.textContent = taskText;
         tasksUl.append(newTask);
         newCheck.type = `checkbox`;
         newTask.prepend(newCheck);
-        newTask.append(taskClickRange);
+        newText.textContent= taskText;
+        newText.classList.add(`newText`);
+        newTask.append(newText);
         emptyListMsg.style.display = `none`;
         newTask.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>`;
         
         let newDelete = newTask.lastElementChild;
         newDelete.classList.add(`newDelete`);
-        console.log(newDelete)
 
         addTaskInput.placeholder = `Inserir nova tarefa...`;
         clearInterval(placeholderAnimation);
@@ -78,11 +82,11 @@ function addTask(taskText = addTaskInput.value){         //funcao para criar tar
 }
 
 tasksUl.addEventListener(`click`, e => {       //adicionando event listeners
-    if(e.target.matches(`.taskClickRange`)){
-        let checkbox = e.target.parentElement.firstElementChild;
+    if(e.target.matches(`li`)){
+        let checkbox = e.target.firstElementChild;
         checkbox.checked = !checkbox.checked;
-        if (checkbox.checked) e.target.parentElement.classList.add(`checkedTask`);
-        else e.target.parentElement.classList.remove(`checkedTask`);
+        if (checkbox.checked) e.target.classList.add(`checkedTask`);
+        else e.target.classList.remove(`checkedTask`);
     }
     else if(e.target.matches(`input[type="checkbox"]`)){
         if (e.target.checked) e.target.parentElement.classList.add(`checkedTask`);
@@ -95,6 +99,43 @@ tasksUl.addEventListener(`click`, e => {       //adicionando event listeners
     }
     refreshLocalStorage();
 });
+
+tasksUl.addEventListener(`dblclick`, e => {
+    if(e.target.matches(`p`)){
+        editModeLastParagraph = e.target;
+        editModeLastText = editModeLastParagraph.textContent;
+        editModeLastParagraph.textContent = ``;
+        editModeInput = document.createElement(`input`);
+        editModeInput.classList.add(`editModeInput`);
+        editModeInput.value = editModeLastText;
+        e.target.parentElement.append(editModeInput);
+        
+        editModeInput.addEventListener(`keyup`, e => {
+            if(e.key === `Enter`){
+                if(editModeInput.value < 1){
+                    editModeLastParagraph.textContent = editModeLastText;
+                }
+                else{
+                    editModeLastParagraph.textContent = editModeInput.value;
+                    editModeLastText = editModeInput.value;
+                }
+                editModeInput.remove();
+                refreshLocalStorage();
+            }
+        });
+    }
+});
+
+window.addEventListener(`click`, (e) => {
+    if(editModeLastParagraph){
+        if(e.target !== editModeInput){
+            editModeLastParagraph.textContent = editModeLastText;
+            editModeInput.remove();
+        }
+        refreshLocalStorage();
+    }
+});
+
 
 function refreshLocalStorage(){    //funcao para atualizar localStorage com alteracão nas tasks
     tasksUl = document.querySelector(`#tasksUl`);
