@@ -242,7 +242,6 @@ input[type="checkbox"]{
         position: fixed;
         left: 15px;
         bottom: 15px;
-        fill: red;
         height: 40px;
         width: 40px;
         box-shadow: 2px 2px 10px black;
