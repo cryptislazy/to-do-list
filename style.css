@@ -245,5 +245,6 @@ input[type="checkbox"]{
         height: 40px;
         width: 40px;
         box-shadow: 2px 2px 10px black;
+        z-index: 10;
     }
 }
