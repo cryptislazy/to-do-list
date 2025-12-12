@@ -43,12 +43,13 @@ button{
     width: 30px;
     height: 30px;
     cursor: pointer;
-    transform: translate(0px, 5px);
+    transform: translate(0px, 6px);
     transition: opacity 0.2s ease;
     fill: rgb(var(--tertiary-color));
     padding: 5px;
     padding-top: 10px;
     align-self: flex-end;
+    z-index: 10;
 }
 
 li{
