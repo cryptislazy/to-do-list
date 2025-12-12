@@ -10,11 +10,6 @@ let taskCheckedOrder = [];
 let savedTasksHTML = localStorage.getItem(`savedTasksHTML`);
 let savedTaskCheckedOrder = JSON.parse(localStorage.getItem(`taskCheckedOrder`));
 
-//variaveis do modo de edicao:
-let editModeLastParagraph = null;
-let editModeLastText = null;
-let editModeInput = null;
-
 window.addEventListener(`load`, refreshLocalStorage);
 
 const placeholderAnimation = setInterval(() => {    //animacao do input
@@ -82,60 +77,26 @@ function addTask(taskText = addTaskInput.value){         //funcao para criar tar
 }
 
 tasksUl.addEventListener(`click`, e => {       //adicionando event listeners
-    if(e.target.matches(`li`)){
-        let checkbox = e.target.firstElementChild;
-        checkbox.checked = !checkbox.checked;
-        if (checkbox.checked) e.target.classList.add(`checkedTask`);
-        else e.target.classList.remove(`checkedTask`);
+    let currentLi = e.target.closest(`li`);
+    let checkbox = currentLi.firstElementChild;
+    console.log(e.target)
+    if(currentLi){
+        if(e.target.matches(`.newDelete`)){
+            currentLi.remove();
+            tasks = document.querySelectorAll(`li`);
+            if (tasks.length < 1) emptyListMsg.style.display = `flex`;
+        }
+        else if(!e.target.matches(`input[type="checkbox"]`)){
+            checkbox.checked = !checkbox.checked;
+        }
+
+        if (checkbox.checked) currentLi.classList.add(`checkedTask`);
+        else currentLi.classList.remove(`checkedTask`);
     }
-    else if(e.target.matches(`input[type="checkbox"]`)){
-        if (e.target.checked) e.target.parentElement.classList.add(`checkedTask`);
-        else e.target.parentElement.classList.remove(`checkedTask`);
-    }
-    else if(e.target.matches(`.newDelete`)){
-        e.target.parentElement.remove();
-        tasks = document.querySelectorAll(`li`);
-        if (tasks.length < 1) emptyListMsg.style.display = `flex`;
-    }
+    
+    
     refreshLocalStorage();
 });
-
-tasksUl.addEventListener(`dblclick`, e => {
-    if(e.target.matches(`p`)){
-        editModeLastParagraph = e.target;
-        editModeLastText = editModeLastParagraph.textContent;
-        editModeLastParagraph.textContent = ``;
-        editModeInput = document.createElement(`input`);
-        editModeInput.classList.add(`editModeInput`);
-        editModeInput.value = editModeLastText;
-        e.target.parentElement.append(editModeInput);
-        
-        editModeInput.addEventListener(`keyup`, e => {
-            if(e.key === `Enter`){
-                if(editModeInput.value < 1){
-                    editModeLastParagraph.textContent = editModeLastText;
-                }
-                else{
-                    editModeLastParagraph.textContent = editModeInput.value;
-                    editModeLastText = editModeInput.value;
-                }
-                editModeInput.remove();
-                refreshLocalStorage();
-            }
-        });
-    }
-});
-
-window.addEventListener(`click`, (e) => {
-    if(editModeLastParagraph){
-        if(e.target !== editModeInput){
-            editModeLastParagraph.textContent = editModeLastText;
-            editModeInput.remove();
-        }
-        refreshLocalStorage();
-    }
-});
-
 
 function refreshLocalStorage(){    //funcao para atualizar localStorage com alteracão nas tasks
     tasksUl = document.querySelector(`#tasksUl`);
