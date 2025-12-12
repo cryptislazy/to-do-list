@@ -43,7 +43,7 @@ button{
     width: 30px;
     height: 30px;
     cursor: pointer;
-    transform: translate(0px, -10px);
+    transform: translate(0px, 5px);
     transition: opacity 0.2s ease;
     fill: rgb(var(--tertiary-color));
     padding: 5px;
@@ -59,6 +59,7 @@ li{
     color: rgb(var(--tertiary-color));
     font-size: 17px;
     transition: background-color 0.2s ease;
+    display: flex;
 }
 
 li:hover{
@@ -69,8 +70,8 @@ li:hover{
     color: rgb(var(--tertiary-color));
     font-size: 20px;
     position: absolute;
-    transform: translate(0px, -55px);
-    margin-left: 35px;
+    transform: translate(0px, -25px);
+    margin-left: 40px;
     max-width: calc(100vw - 120px);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -144,6 +145,10 @@ input[type="checkbox"]{
 .checkedTask{
     background-color: rgb(var(--checked-color));
     opacity: 50%;
+}
+
+.checkedTask input[type="checkbox"]{
+    accent-color: black;
 }
 
 .checkedTask:hover{
@@ -234,7 +239,7 @@ input[type="checkbox"]{
 
 @media(max-width: 480px){
     #themeBtn{
-        position: absolute;
+        position: fixed;
         left: 15px;
         bottom: 15px;
         fill: red;
